@@ -1,0 +1,11 @@
+$feed = ([XML](Invoke-WebRequest -Uri 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada').Content).rss.channel.item | Select-Object title, description 
+$Sustitucion = $feed | ForEach-Object { $_-replace "@{title=", "
+
+Titular: " }
+$sustituir = $Sustitucion | ForEach-Object { $_-replace "description=", "
+Contenido: " }   
+Select-String -Pattern 'coronavirus'  
+$sustituir | ForEach-Object {$_-replace "}","
+"} | ForEach-Object {$_-replace ";","
+"} 
+Out-File -Encoding utf8 -FilePath C:\Users\Coke\DesktopCoronavirus.txt
